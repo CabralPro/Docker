@@ -45,6 +45,17 @@ docker run -d -p 5432:5432 --name pgsql1 --volumes-from dbdados -e POSTGRESQL_US
 	-> -e cria variaveis de ambiente no container 
 	-> kamui/postgresql cria o container do postgres
 
+docker run -ti --dns num_do_dns nome_da_imagem : passa o dns para o container
+
+docker run -ti --hostname nome_do_host_name nome_da_imagem : passa o hostname
+
+docker  un -ti --link nome_do_container --name segundo_container nome_da_imagem : 
+	->faz com que o container seja visto por outros
+
+docker run -ti --expose num_da_porta nome_da_imagem : expoe a porta do container
+
+docker run -ti --publish porta_do_host:porta_do_container : binda uma porta na outra
+
 
 df -h : mostra as partições (comando do linux)
 
@@ -60,7 +71,11 @@ telnet ip_do_container porta : ex (telnet 172.17.0.2 80) mostra se esta responde
 
 curl ip_do_container:porta      : faz um "cat" no index.html do APACHE 
 
+ctrl + p + q: sai do container e o deixa em execução
 
+
+
+---------------------------------------------------------------------------------------------------
 
 //////////////
 // VOLUMES //
@@ -77,7 +92,7 @@ docker run -ti  -v caminho-do-volume:/volume debian  : cria um container com a i
 						       host
 
 
-
+--------------------------------------------------------------------------------------------------
 
 /////////////////
 // DOCKERFILE //
@@ -122,12 +137,110 @@ VOLUME /direorio-do-volume : diretorio de volume do container, o diretoro do doc
 			     automticamente
 
 
+-------------------------------------------------------------------------------------------------
 
-COMANDOS 
+//////////////////////
+// DOCKER COMPOSER //
+////////////////////
+
+OBS:    .:/code    diretorio atual monta dentro do container no /code
+
+
+build: caminho_do_dockerfile      : bilda o dockerfile
+
+command: comando_a_ser_executado     : executa um comando
+
+dns: num_do_dns    : indica o servidor dns do container
+
+dns_search: example.com     : indica o servidor dns do container por dominio
+
+dockerfile: dockerfile_alternativo   : indica um dockerfile que esteja com outro nome
+
+env_file: caminho_do_arquivo   : arquivo de variaveis de ambiente
+
+#define variaveis de ambiente
+enviroment:  
+	Nome_da_variavel: valor_da_variavel
+
+
+#expoe as portas
+expose:
+	- "3000"
+	- "8000"
+
+#linka com outos container que nao fazem parte desse compose
+external_links:
+	- redis_1
+	- project_db1:mysql
+
+
+#adiciona uma entrada no /etc/host do container
+extra_host:
+	- "somehost:123.123.123.12"
+
+
+#indica uma imagem
+image: ubuntu:14.04
+
+#metadata
+labels
+
+
+#linka containers dentro d mesmo docker-compose
+links:
+	- db
+
+
+#indica onde mandar os logs, pode ser local ou em syslog remoto
+log_opt:
+	syslog-adress: "tpc://192.168.0.42:123"
+
+
+#modo de uso da rede
+net: "bridge"
+net: "host"
+
+
+#expoe as portas do container E DO HOST
+ports:
+	- "3000"
+	- "8000:8000"
+
+
+#monta volumes no container
+volumes:
+	#path especifico
+	- /var/lib/mysqlm
+
+
+	#path absoluto mapeado
+	- /opt/data:var/lib/mysql
+
+	
+	#pat do host, relativo ao compose file
+	- ./cache:/tmp/cache
+
+#monta volumes atreaves de outro container
+volumes_from:
+	- service_name
+	- service_name:ro
+
+
+--------------------------------------------------------------------------------------------------
+
+//////////////////
+// DOCKER HOST //
+////////////////
 
 docker build -t nome_da_minha_imagem:1.0 diretorio-do-dockerfile    : cria uma imagem a partir do 									      dockerfile
 
 docker images : mostra todas as imagens criadas
+
+iptables -t nat -L -n : mostra os redrecionamentos do host para os containers
+
+docker run -t --net=host nome_da_imagem:  passa todas as configs de rede do host para o container
+
+
 
 ATENÇÃO: O dockerfile cria uma imagem e depois devemos criar o container ultilizando essa imagem criada, lembando que essa imagem criada pode ultilizar imagens dentro dela
 
@@ -156,4 +269,4 @@ https://www.youtube.com/watchv=OZJZMbxSiuQ&list=PLtwrLrziOEJMjLQllPfAItpcMnToECp
 
 ctrl+d: mata o shell e sai do container
 
-ctrl + p + q: sai do container e o deixa em execução
+
