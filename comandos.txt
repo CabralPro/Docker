@@ -1,0 +1,159 @@
+/////////////////
+// CONTAINERS //
+///////////////
+
+docker ps : mostra os containers que estao rodando (exibe detalhes como id)
+
+docker ps -a : mostra todos os container inclusive os que nao estao rodando
+
+docker run -ti ubuntu /bin/bash
+	-> -ti : deixa o terminal disponivel / caso não coloque a maquina ficara rodando 	   em background
+	->ubuntu: nome da imagem
+	->/bin/bash: serve cair em uma maquina com um terminal shell
+
+docker attach id-do-container : entra em um container que esta em execução
+
+docker create ubuntu: cria um container mas nao executa
+
+docker stop id-do-container: para o container
+
+docker start id-do-container: inicia o container
+
+docker pause id-do-container: PAUSA o container
+
+docker unpause id-do-container: despausa o container
+
+docker stats id-do-container: informações de memoria do container
+
+docker top id-do-container: mostra todos os processos que estao rodando no container
+
+docker log id-do-container: logs do container
+
+docker rm id-do-container: excluir container que nao esta em execução
+
+docker rm -f id-do-container: excluir container esta em execução
+
+docker inspect id-do-container: todas as informações do container
+
+docker inspect -f {{.Mounts}} id-do-container : mostra o caminho do diretorio 						compartilhado como volume e na frente
+						mostra a pasta do diretorio atual que
+						faz referencia ao caminho compartilhado
+
+docker run -d -p 5432:5432 --name pgsql1 --volumes-from dbdados -e POSTGRESQL_USER=docker -e POSTGRESQL_PASS=docker -e POSTGRESQL_DB=docker kamui/postgresql
+	
+	-> -p liga a porta do host com a do container, nessa sequencia
+	-> -e cria variaveis de ambiente no container 
+	-> kamui/postgresql cria o container do postgres
+
+
+df -h : mostra as partições (comando do linux)
+
+touch nome-do-arquivo : cria um arquivo dentro do diretorio atual
+
+ps -ef : mostra os processos que estao rodando no container
+
+ss -a : mostra as portas abertas do container
+
+ip addr : mostra o ip do container
+
+telnet ip_do_container porta : ex (telnet 172.17.0.2 80) mostra se esta respondendo
+
+curl ip_do_container:porta      : faz um "cat" no index.html do APACHE 
+
+
+
+//////////////
+// VOLUMES //
+////////////
+
+docker run -ti  -v caminho-do-volume:/volume debian  : cria um container com a imagem
+						       do debian e tambem um volume dentro
+						       desse container - o caminho do 	
+						       volume é uma pasta que o usuario
+						       cria dentro do host docker e que o
+						       container usar para salvar os dados
+						       porem com o nome 'volume' essa faz
+						       REFERENCIA a pasta criada no docker
+						       host
+
+
+
+
+/////////////////
+// DOCKERFILE //
+///////////////
+
+COMANDOS PARA MONTAR O DOCKERFILE:
+ 
+FROM debian : especifica a imagem base do container
+
+MAINTAINER Arthur tuti360@hotmail.com
+
+RUN apt-get update && apt-get install apache2 -y && apt-get clean : usado por exemplo para
+	instalar pacotes. Quanto menos 'run' tiver no dockerfile melhor o ideal é colocar
+	tudo em um 'run' e ir ligando com &&  (NÃO É EXECUTADO EM TEMPO DE EXECUÇÃO DO CONTAINER)
+	o -y é importante pois durane a instalação podera aparecer mensagens de confirmação, e o
+	-y aceita todas automaticamente
+
+ADD opa.txt /diretorio  : adiciona o arquvo do docker host para dentro do container (consegue add
+			   arquivos .tar)
+
+CMD aqui-vai-os-comandos : parametro para o entrypoint (PARECIDO COM O RUN, POREM É EXECUTADO EM
+			   TEMPO DE EXECUÇÃO DO CONTAINER)
+
+LABEL Descricao="bla bla bla" : serve para colocar metadados, serve pra auxiliar
+
+COPY opa.txt /diretorio/ : igual ao ADD mas nao copia arquivos .tar
+
+ENTRYPOINT ["/usr/bin/apache2ctl", "-D", "FOREGROUND"] : define entrypoint do container
+	nesse exemplo se o apache morrer o container tambem morre, economizando memoria,
+	o entrypoint funciona como se fosse o CMD porem se o processo morrer o container 
+	more tambem
+
+ENV meunome="arthur" : cria variavis de ambiente e joga pra dentro do container
+
+EXPOSE 80 : expoe uma porta do container
+
+USER arthur : define o usuario, por padrão será o root
+
+WORKDIR /home : define o diretorio raiz do container
+
+VOLUME /direorio-do-volume : diretorio de volume do container, o diretoro do dockerhost é criado
+			     automticamente
+
+
+
+COMANDOS 
+
+docker build -t nome_da_minha_imagem:1.0 diretorio-do-dockerfile    : cria uma imagem a partir do 									      dockerfile
+
+docker images : mostra todas as imagens criadas
+
+ATENÇÃO: O dockerfile cria uma imagem e depois devemos criar o container ultilizando essa imagem criada, lembando que essa imagem criada pode ultilizar imagens dentro dela
+
+							
+------------------------------------------------------------------------------------------
+vOLUMES
+ tambem
+O volume é criado dentro do container, é na verdade um diretorio de arquivos, que pode 
+inclusive ser compartilhado com outros containers, algo tambem que pode ser feito é criar
+um container que tenha somente volumes contendo dados, e os outros containers irão usar
+esse volume
+
+------------------------------------------------------------------------------------------
+
+OBS:  Container nao é imagem, excluir um container nao exclui as imagens, pois elas podem
+ser ultilizadas em varios containers
+
+------------------------------------------------------------------------------------------
+
+LIMITAR MEMORIA: 
+
+https://www.youtube.com/watchv=OZJZMbxSiuQ&list=PLtwrLrziOEJMjLQllPfAItpcMnToECpFg&index=8
+
+
+------------------------------------------------------------------------------------------
+
+ctrl+d: mata o shell e sai do container
+
+ctrl + p + q: sai do container e o deixa em execução
