@@ -7,11 +7,11 @@ docker ps : mostra os containers que estao rodando (exibe detalhes como id)
 docker ps -a : mostra todos os container inclusive os que nao estao rodando
 
 docker run -ti ubuntu /bin/bash
-	-> -ti : deixa o terminal disponivel / caso n„o coloque a maquina ficara rodando 	   em background
+	-> -ti : deixa o terminal disponivel / caso n√£o coloque a maquina ficara rodando 	   em background
 	->ubuntu: nome da imagem
 	->/bin/bash: serve cair em uma maquina com um terminal shell
 
-docker attach id-do-container : entra em um container que esta em execuÁ„o
+docker attach id-do-container : entra em um container que esta em execu√ß√£o
 
 docker create ubuntu: cria um container mas nao executa
 
@@ -23,17 +23,17 @@ docker pause id-do-container: PAUSA o container
 
 docker unpause id-do-container: despausa o container
 
-docker stats id-do-container: informaÁıes de memoria do container
+docker stats id-do-container: informa√ß√µes de memoria do container
 
 docker top id-do-container: mostra todos os processos que estao rodando no container
 
 docker log id-do-container: logs do container
 
-docker rm id-do-container: excluir container que nao esta em execuÁ„o
+docker rm id-do-container: excluir container que nao esta em execu√ß√£o
 
-docker rm -f id-do-container: excluir container esta em execuÁ„o
+docker rm -f id-do-container: excluir container esta em execu√ß√£o
 
-docker inspect id-do-container: todas as informaÁıes do container
+docker inspect id-do-container: todas as informa√ß√µes do container
 
 docker inspect -f {{.Mounts}} id-do-container : mostra o caminho do diretorio 						compartilhado como volume e na frente
 						mostra a pasta do diretorio atual que
@@ -56,8 +56,10 @@ docker run -ti --expose num_da_porta nome_da_imagem : expoe a porta do container
 
 docker run -ti --publish porta_do_host:porta_do_container : binda uma porta na outra
 
+docker exec -it ID_DO_CONTAINER /bin/bash   :abre o bash do container 
 
-df -h : mostra as partiÁıes (comando do linux)
+
+df -h : mostra as parti√ß√µes (comando do linux)
 
 touch nome-do-arquivo : cria um arquivo dentro do diretorio atual
 
@@ -71,7 +73,7 @@ telnet ip_do_container porta : ex (telnet 172.17.0.2 80) mostra se esta responde
 
 curl ip_do_container:porta      : faz um "cat" no index.html do APACHE 
 
-ctrl + p + q: sai do container e o deixa em execuÁ„o
+ctrl + p + q: sai do container e o deixa em execu√ß√£o
 
 
 
@@ -84,7 +86,7 @@ ctrl + p + q: sai do container e o deixa em execuÁ„o
 docker run -ti  -v caminho-do-volume:/volume debian  : cria um container com a imagem
 						       do debian e tambem um volume dentro
 						       desse container - o caminho do 	
-						       volume È uma pasta que o usuario
+						       volume √© uma pasta que o usuario
 						       cria dentro do host docker e que o
 						       container usar para salvar os dados
 						       porem com o nome 'volume' essa faz
@@ -105,16 +107,16 @@ FROM debian : especifica a imagem base do container
 MAINTAINER Arthur tuti360@hotmail.com
 
 RUN apt-get update && apt-get install apache2 -y && apt-get clean : usado por exemplo para
-	instalar pacotes. Quanto menos 'run' tiver no dockerfile melhor o ideal È colocar
-	tudo em um 'run' e ir ligando com &&  (N√O … EXECUTADO EM TEMPO DE EXECU«√O DO CONTAINER)
-	o -y È importante pois durane a instalaÁ„o podera aparecer mensagens de confirmaÁ„o, e o
+	instalar pacotes. Quanto menos 'run' tiver no dockerfile melhor o ideal √© colocar
+	tudo em um 'run' e ir ligando com &&  (N√ÉO √â EXECUTADO EM TEMPO DE EXECU√á√ÉO DO CONTAINER)
+	o -y √© importante pois durane a instala√ß√£o podera aparecer mensagens de confirma√ß√£o, e o
 	-y aceita todas automaticamente
 
 ADD opa.txt /diretorio  : adiciona o arquvo do docker host para dentro do container (consegue add
 			   arquivos .tar)
 
-CMD aqui-vai-os-comandos : parametro para o entrypoint (PARECIDO COM O RUN, POREM … EXECUTADO EM
-			   TEMPO DE EXECU«√O DO CONTAINER)
+CMD aqui-vai-os-comandos : parametro para o entrypoint (PARECIDO COM O RUN, POREM √â EXECUTADO EM
+			   TEMPO DE EXECU√á√ÉO DO CONTAINER)
 
 LABEL Descricao="bla bla bla" : serve para colocar metadados, serve pra auxiliar
 
@@ -129,11 +131,11 @@ ENV meunome="arthur" : cria variavis de ambiente e joga pra dentro do container
 
 EXPOSE 80 : expoe uma porta do container
 
-USER arthur : define o usuario, por padr„o ser· o root
+USER arthur : define o usuario, por padr√£o ser√° o root
 
 WORKDIR /home : define o diretorio raiz do container
 
-VOLUME /direorio-do-volume : diretorio de volume do container, o diretoro do dockerhost È criado
+VOLUME /direorio-do-volume : diretorio de volume do container, o diretoro do dockerhost √© criado
 			     automticamente
 
 
@@ -242,20 +244,20 @@ docker run -t --net=host nome_da_imagem:  passa todas as configs de rede do host
 
 
 
-ATEN«√O: O dockerfile cria uma imagem e depois devemos criar o container ultilizando essa imagem criada, lembando que essa imagem criada pode ultilizar imagens dentro dela
+ATEN√á√ÉO: O dockerfile cria uma imagem e depois devemos criar o container ultilizando essa imagem criada, lembando que essa imagem criada pode ultilizar imagens dentro dela
 
 							
 ------------------------------------------------------------------------------------------
 vOLUMES
  tambem
-O volume È criado dentro do container, È na verdade um diretorio de arquivos, que pode 
-inclusive ser compartilhado com outros containers, algo tambem que pode ser feito È criar
-um container que tenha somente volumes contendo dados, e os outros containers ir„o usar
+O volume √© criado dentro do container, √© na verdade um diretorio de arquivos, que pode 
+inclusive ser compartilhado com outros containers, algo tambem que pode ser feito √© criar
+um container que tenha somente volumes contendo dados, e os outros containers ir√£o usar
 esse volume
 
 ------------------------------------------------------------------------------------------
 
-OBS:  Container nao È imagem, excluir um container nao exclui as imagens, pois elas podem
+OBS:  Container nao √© imagem, excluir um container nao exclui as imagens, pois elas podem
 ser ultilizadas em varios containers
 
 ------------------------------------------------------------------------------------------
